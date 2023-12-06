@@ -1,13 +1,13 @@
 # Mint Transactions Tagger for Amazon Purchases
 
-## UPDATE - Now works with Amazon "Request My Data" Export ##
+## UPDATE - Now works with Amazon "Request My Data" Export
 
-This tool originally worked with the "Order History Reports", which gave one slice of information about Amazon order history. Amazon sunset this export/reporting tool on 3/20/2023. I have since adapted this tool to work with the zipfile of data produced by that slower, cumbersome, and more comprehensive "Request My Data" tool - for details on this migration, see  
+This tool originally worked with the "Order History Reports", which gave one slice of information about Amazon order history. Amazon sunset this export/reporting tool on 3/20/2023. I have since adapted this tool to work with the zipfile of data produced by that slower, cumbersome, and more comprehensive "Request My Data" tool - for details on this migration, see
 [this issue](https://github.com/jprouty/mint-amazon-tagger/issues/151).
 
 The most important change is that category information is not present in this export, meaning the tool cannot help you categorize never before seen items. For previously purchased items, by default the tool use the most common tagged category, based on an exact string match of the line item description.
 
-## Overview ##
+## Overview
 
 Do you order a lot from Amazon? Tired of everything showing up as "Amazon"
 and category "Shopping" in mint.com? Then this tool is for you!
@@ -26,7 +26,7 @@ change all (or the majority of) all the past, tagged examples of that item for t
 This tool **will not** retag or touch transactions that have already been
 tagged. Feel free to adjust categories after the fact without fear that the
 next run will wipe everything out. If you do want to re-tag
-previously tagged transactions take a look at the retag_changed option.
+previously tagged transactions take a look at the `retag_changed` option.
 
 This tool **does not** save your username or password. The tool is powered by the [Selenium framework](https://www.selenium.dev/) to automate an instance of the Chrome/Chromium browser. When running the tool it will prompt for the username and password and then enter it into the browser for you. There are options that allow for manual user operation of the login flows for both Mint and Amazon.
 
@@ -37,23 +37,23 @@ Some things the tagger cannot do:
 - Amazon credit card award points are not reported anywhere in the order/item reports.
 - Amazon gift cards are not yet supported (see [issue #59](https://github.com/jprouty/mint-amazon-tagger/issues/59))
 
-## Sponsorship ##
+## Sponsorship
 
 This project has been a passion project of [mine](https://github.com/jprouty) to better understand cashflow (critical to trend analysis and budgeting).
 
 If you have found this tool useful, please consider [sponsoring me](https://github.com/sponsors/jprouty).
 
-## Install and Getting started ##
+## Install and Getting started
 
-### EASIEST - Pre-built binaries ###
+### EASIEST - Pre-built binaries
 
 Please download the latest version from [github's releases page](https://github.com/jprouty/mint-amazon-tagger/releases)
 
-### ADVANCED - Docker Headless CLI ###
+### ADVANCED - Docker Headless CLI
 
 You can run the Mint Amazon Tagger via docker like so:
 
-```
+```bash
 # Check out this git repo if not already:
 git clone https://github.com/jprouty/mint-amazon-tagger.git
 cd mint-amazon-tagger
@@ -67,13 +67,13 @@ docker run -it --rm mint-amazon-tagger
 
 If you're using ARM, you need to build with:
 
-```
+```bash
 docker build --platform linux/amd64 -t mint-amazon-tagger .
 ```
 
-### ADVANCED - Run from python source ###
+### ADVANCED - Run from python source
 
-#### Setup ####
+#### Setup
 
 1. `pip3 install mint-amazon-tagger`
 
@@ -83,7 +83,7 @@ docker build --platform linux/amd64 -t mint-amazon-tagger .
 3. Chromedriver should be fetched automatically. But if you run into issues,
 try this:
 
-```
+```bash
 # Mac:
 brew tap homebrew/cask
 brew cask install chromedriver
@@ -93,7 +93,7 @@ brew cask install chromedriver
 sudo apt-get install chromium-chromedriver
 ```
 
-#### Running - Full Auto GUI ####
+#### Running - Full Auto GUI
 
 This mode will fetch your Amazon Order History for you as well as tag mint.
 
@@ -101,49 +101,36 @@ This mode will fetch your Amazon Order History for you as well as tag mint.
 
 1. Plug in all your info into the app!
 
-#### Running - Full Auto CLI ####
+#### Running - Full Auto CLI
 
 This mode will fetch your Amazon Order History for you as well as tag mint.
 
 1. `mint-amazon-tagger-cli --amazon_email email@cool.com --mint_email couldbedifferent@aol.com`
 
-#### Running - Semi-Auto ####
+#### Running - Semi-Auto
 
 This mode requires you to fetch your Amazon Order History manually, then the
 tagger automates the rest.
 
 1. Generate and download your Amazon Order History Reports.
-
-a. Login and visit [Amazon Order History
-Reports](https://www.amazon.com/gp/b2b/reports)
-
-b. "Request Report" for "Items", "charges and shipments", and "Refunds". Make sure the
-date ranges are the same.
-
-c. Download the completed reports. Let's called them
-`Items.csv charges.csv Refunds.csv` for this walk-through. Note that
-Refunds is optional! Yay.
-
+   1. Login and visit [Amazon Order History Reports](https://www.amazon.com/gp/b2b/reports)
+   2. "Request Report" for "Items", "charges and shipments", and "Refunds". Make sure the date ranges are the same.
+   3. Download the completed reports. Let's called them `Items.csv charges.csv Refunds.csv` for this walk-through. Note that Refunds is optional! Yay.
 2. (Optional) Do a dry run! Make sure everything looks right first. Run:
-`mint-amazon-tagger-cli --items_csv Items.csv --charges_csv charges.csv --refunds_csv Refunds.csv --dry_run --mint_email yourEmail@here.com`
-
+    `mint-amazon-tagger-cli --items_csv Items.csv --charges_csv charges.csv --refunds_csv Refunds.csv --dry_run --mint_email yourEmail@here.com`
 3. Now perform the actual updates, without `--dry_run`:
-`mint-amazon-tagger-cli --items_csv Items.csv --charges_csv charges.csv --refunds_csv Refunds.csv --mint_email yourEmail@here.com`
-
-4. Sit back and relax! The run time depends on the speed of your machine,
-quality of internet connection, and total number of transactions. For
-reference, my machine did about 14k Mint transactions, finding 2k Amazon
-matches in under 10 minutes.
+    `mint-amazon-tagger-cli --items_csv Items.csv --charges_csv charges.csv --refunds_csv Refunds.csv --mint_email yourEmail@here.com`
+4. Sit back and relax! The run time depends on the speed of your machine, quality of internet connection, and total number of transactions. For reference, my machine did about 14k Mint transactions, finding 2k Amazon matches in under 10 minutes.
 
 To see all options, see:
 `mint-amazon-tagger-cli --help`
 
-## Tips and Tricks ##
+## Tips and Tricks
 
 Not every bank treats Amazon purchases the same, or processes transactions as quickly as others. If you are having a low match rate (look at the terminal output after completion), then try adjusting some of the options or command line flags. To see a complete list, run `mint-amazon-tagger-cli --help`.
 
 Some common options to try:
 
-- --mint_input_include_inferred_description. This allows for more generous consideration of Mint transactions for matching. See [more context here](https://github.com/jprouty/mint-amazon-tagger/issues/50)
-- --mint_input_include_user_description. Similar to above; considers the current description as shown in the Mint tool (including any user edits).
-- --max_days_between_payment_and_shipping. If your bank is slow at posting payments, adjusting this value up to 7 or more will increase your chance of matching. If you have a high volume of purchases, this can increase your chance of mis-tagging items.
+- `--mint_input_include_inferred_description`. This allows for more generous consideration of Mint transactions for matching. See [more context here](https://github.com/jprouty/mint-amazon-tagger/issues/50)
+- `--mint_input_include_user_description`. Similar to above; considers the current description as shown in the Mint tool (including any user edits).
+- `--max_days_between_payment_and_shipping`. If your bank is slow at posting payments, adjusting this value up to 7 or more will increase your chance of matching. If you have a high volume of purchases, this can increase your chance of mis-tagging items.
